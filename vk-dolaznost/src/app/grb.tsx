@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Grb({ size = 44, className = "" }: { size?: number; className?: string }) {
   return (
     <Image
-      src="/grb.svg"
+      src="/grb.png"
       width={size}
       height={size}
       alt="Grb kluba"
