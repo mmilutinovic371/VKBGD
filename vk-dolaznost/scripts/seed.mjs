@@ -1,10 +1,18 @@
 /**
- * Upisuje pravi spisak ekipe. Izmeni IMENA i TRENER ispod pre pokretanja.
+ * Upisuje pravi spisak ekipe. Izmeni IMENA ispod pre pokretanja.
  * Pokreni samo jednom, na praznoj bazi (npm run db:migrate pa onda ovo).
+ *
+ * PIN-ovi su unapred postavljeni (niko ne bira svoj pri prvoj prijavi):
+ * igrači dobijaju PODRAZUMEVANI_PIN, trener svoj poseban TRENER_PIN.
+ * Trener kasnije može da resetuje bilo čiji PIN na /trener/igraci — posle
+ * reseta, ta osoba sama bira nov PIN pri sledećoj prijavi.
  */
 import Database from "better-sqlite3";
+import bcrypt from "bcryptjs";
 
-const TRENER = "Trener";
+const TRENER = "Petar Boscanin";
+const TRENER_PIN = "1978";
+const PODRAZUMEVANI_PIN = "1234";
 
 const IMENA = [
   // "Ime Prezime",
@@ -25,14 +33,14 @@ if (IMENA.length === 0) {
 
 const sada = Math.floor(Date.now() / 1000);
 const upisiIgraca = db.prepare(
-  "insert into players (name, cap_number, role, active, created_at) values (?, ?, ?, 1, ?)",
+  "insert into players (name, cap_number, role, pin_hash, active, created_at) values (?, ?, ?, ?, 1, ?)",
 );
 
 db.transaction(() => {
-  upisiIgraca.run(TRENER, null, "trener", sada);
-  IMENA.forEach((ime, i) => upisiIgraca.run(ime, i + 1, "igrac", sada));
+  upisiIgraca.run(TRENER, null, "trener", bcrypt.hashSync(TRENER_PIN, 10), sada);
+  const igracHash = bcrypt.hashSync(PODRAZUMEVANI_PIN, 10);
+  IMENA.forEach((ime, i) => upisiIgraca.run(ime, i + 1, "igrac", igracHash, sada));
 })();
 
-console.log(`Upisano ${IMENA.length} igrača i trener "${TRENER}".`);
-console.log("Svako se prijavljuje svojim imenom, PIN bira sam pri prvoj prijavi.");
+console.log(`Upisano ${IMENA.length} igrača (PIN ${PODRAZUMEVANI_PIN}) i trener "${TRENER}" (PIN ${TRENER_PIN}).`);
 db.close();
