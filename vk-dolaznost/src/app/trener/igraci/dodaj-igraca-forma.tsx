@@ -28,17 +28,17 @@ export default function DodajIgracaForma() {
         value={ime}
         onChange={(e) => setIme(e.target.value)}
         placeholder="Ime i prezime"
-        className="flex-1 rounded-lg border border-slate-300 p-2 text-sm"
+        className="flex-1 rounded-lg border border-navy-800/16 p-2 text-sm"
       />
       <input
         value={kapa}
         onChange={(e) => setKapa(e.target.value.replace(/\D/g, ""))}
         placeholder="Kapa"
-        className="w-20 rounded-lg border border-slate-300 p-2 text-sm"
+        className="w-20 rounded-lg border border-navy-800/16 p-2 text-sm"
       />
       <button
         disabled={uToku}
-        className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
       >
         Dodaj
       </button>

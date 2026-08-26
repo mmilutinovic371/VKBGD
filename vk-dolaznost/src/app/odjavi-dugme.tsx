@@ -9,7 +9,7 @@ export default function OdjaviDugme() {
     <button
       onClick={() => pokreni(() => odjaviSe())}
       disabled={uToku}
-      className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600"
+      className="rounded-[7px] border border-white/20 px-3.5 py-2.25 font-body text-[12.5px] font-semibold text-white/70 transition-colors hover:bg-white/10"
     >
       Odjava
     </button>

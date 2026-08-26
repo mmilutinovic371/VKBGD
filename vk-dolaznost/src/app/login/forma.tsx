@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { prijaviSe } from "@/app/akcije";
 
 interface Igrac {
@@ -14,6 +14,7 @@ export default function Forma({ igraci }: { igraci: Igrac[] }) {
   const [pin, setPin] = useState("");
   const [greska, setGreska] = useState<string | null>(null);
   const [uToku, pokreni] = useTransition();
+  const pinInputRef = useRef<HTMLInputElement>(null);
 
   function posalji(e: React.FormEvent) {
     e.preventDefault();
@@ -28,18 +29,24 @@ export default function Forma({ igraci }: { igraci: Igrac[] }) {
     });
   }
 
+  const brojKucica = Math.max(4, pin.length);
+
   return (
-    <form onSubmit={posalji} className="flex flex-col gap-4 rounded-xl bg-white p-5 shadow-sm">
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-slate-700">Ime</span>
+    <form onSubmit={posalji} className="relative flex flex-col gap-3.5">
+      <label className="flex flex-col gap-1.5">
+        <span className="font-body text-[11px] font-semibold uppercase tracking-[.14em] text-white/50">
+          Ime
+        </span>
         <select
-          className="rounded-lg border border-slate-300 p-2.5 text-base"
+          className="rounded-[9px] border border-white/18 bg-white/6 p-3.5 text-[15px] font-medium text-white outline-none focus:border-red-600"
           value={playerId}
           onChange={(e) => setPlayerId(e.target.value ? Number(e.target.value) : "")}
         >
-          <option value="">— izaberi —</option>
+          <option value="" className="text-navy-800">
+            — izaberi —
+          </option>
           {igraci.map((i) => (
-            <option key={i.id} value={i.id}>
+            <option key={i.id} value={i.id} className="text-navy-800">
               {i.name}
               {i.capNumber ? ` (kapa ${i.capNumber})` : ""}
             </option>
@@ -47,30 +54,54 @@ export default function Forma({ igraci }: { igraci: Igrac[] }) {
         </select>
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-slate-700">PIN</span>
-        <input
-          type="password"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          minLength={4}
-          maxLength={6}
-          className="rounded-lg border border-slate-300 p-2.5 text-base tracking-widest"
-          value={pin}
-          onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
-          placeholder="••••"
-        />
+      <label className="flex flex-col gap-1.5">
+        <span className="font-body text-[11px] font-semibold uppercase tracking-[.14em] text-white/50">
+          PIN
+        </span>
+        <div
+          className="relative flex gap-2.5"
+          onClick={() => pinInputRef.current?.focus()}
+        >
+          {Array.from({ length: brojKucica }).map((_, i) => {
+            const popunjena = i < pin.length;
+            const aktivna = i === pin.length;
+            return (
+              <div
+                key={i}
+                className={`grid h-14 flex-1 place-items-center rounded-[9px] border bg-white/6 font-cond text-[26px] font-bold text-white ${
+                  aktivna ? "border-red-600" : "border-white/18"
+                }`}
+              >
+                {popunjena ? "•" : ""}
+              </div>
+            );
+          })}
+          <input
+            ref={pinInputRef}
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            value={pin}
+            onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            className="absolute inset-0 h-14 w-full cursor-pointer opacity-0"
+            aria-label="PIN"
+          />
+        </div>
       </label>
 
-      {greska && <p className="text-sm text-red-600">{greska}</p>}
+      {greska && <p className="font-body text-[13px] font-medium text-red-600">{greska}</p>}
 
       <button
         type="submit"
         disabled={uToku}
-        className="rounded-lg bg-indigo-600 py-2.5 font-semibold text-white disabled:opacity-60"
+        className="mt-1.5 rounded-[9px] bg-red-600 py-[15px] font-cond text-xl font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-red-500 disabled:opacity-60"
       >
         {uToku ? "Prijavljivanje…" : "Uđi"}
       </button>
+
+      <p className="text-center font-body text-[12.5px] leading-relaxed text-white/45">
+        Prvi put biraš svoj PIN od 4 cifre. Ostaješ prijavljen 180 dana — bez mejla i naloga.
+      </p>
     </form>
   );
 }
