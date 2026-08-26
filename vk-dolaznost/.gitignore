@@ -1,0 +1,7 @@
+node_modules
+.next
+podaci/*.db
+podaci/*.db-*
+.env
+*.log
+*.tsbuildinfo

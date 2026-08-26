@@ -1,0 +1,39 @@
+{
+  "name": "vk-dolaznost",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:push": "drizzle-kit push",
+    "seed": "node scripts/seed.mjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node scripts/migracija.mjs",
+    "demo": "node scripts/demo.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.1",
+    "drizzle-orm": "^0.45.2",
+    "exceljs": "^4.4.0",
+    "jose": "^5.9.6",
+    "next": "15.5.24",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.31.10",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
