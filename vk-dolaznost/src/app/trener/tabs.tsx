@@ -13,7 +13,7 @@ export default function TrenerTabs() {
   const putanja = usePathname();
 
   return (
-    <div className="flex gap-1">
+    <div className="flex">
       {TABOVI.map((tab) => {
         const aktivan =
           tab.href === "/trener" ? putanja === "/trener" || /^\/trener\/\d+$/.test(putanja) : putanja === tab.href;
@@ -21,7 +21,7 @@ export default function TrenerTabs() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`border-b-[3px] px-4.5 py-2.75 font-body text-[13px] font-semibold tracking-[.04em] transition-colors ${
+            className={`flex-1 border-b-[3px] px-2 py-2.5 text-center font-body text-[12px] font-semibold tracking-[.02em] transition-colors sm:flex-none sm:px-4.5 sm:py-2.75 sm:text-[13px] sm:tracking-[.04em] ${
               aktivan ? "border-red-600 text-white" : "border-transparent text-white/55 hover:text-white/80"
             }`}
           >

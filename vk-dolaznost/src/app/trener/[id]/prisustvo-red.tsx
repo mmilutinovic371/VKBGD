@@ -47,20 +47,28 @@ export default function PrisustvoRed({
 
   return (
     <div
-      className="grid grid-cols-[34px_1fr_100px_190px] items-center gap-3.5 border-b border-navy-800/5 px-5 py-2.25 last:border-0"
+      className="grid grid-cols-[28px_1fr_auto] items-center gap-2.5 border-b border-navy-800/5 px-3.5 py-2.25 last:border-0 sm:grid-cols-[34px_1fr_100px_190px] sm:gap-3.5 sm:px-5"
       style={{ background: present === false ? "rgba(218,31,46,.05)" : "#fff" }}
     >
-      <div className="grid h-7 w-7 place-items-center rounded-full bg-navy-800 font-cond text-xs font-bold text-white">
+      <div className="grid h-6.5 w-6.5 place-items-center rounded-full bg-navy-800 font-cond text-[11px] font-bold text-white sm:h-7 sm:w-7 sm:text-xs">
         {capNumber ?? "–"}
       </div>
       <div>
-        <div className="font-body text-sm font-semibold text-navy-800">{ime}</div>
-        <div className="font-body text-[11.5px] text-navy-800/45">
+        <div className="flex items-center gap-1.5">
+          <span className="font-body text-[13px] font-semibold text-navy-800 sm:text-sm">{ime}</span>
+          <span
+            className="tabular-nums font-body text-[11px] font-semibold sm:hidden"
+            style={{ color: procBoja }}
+          >
+            {procenat}%
+          </span>
+        </div>
+        <div className="font-body text-[11px] text-navy-800/45 sm:text-[11.5px]">
           Najavio: {rsvp ? RSVP_TEKST[rsvp] : "—"}
           {present === true && checkedInAt ? ` · sam se čekirao ${formatVreme(new Date(checkedInAt))}` : ""}
         </div>
       </div>
-      <div className="flex items-center gap-1.75">
+      <div className="hidden items-center gap-1.75 sm:flex">
         <span className="tabular-nums font-body text-[13px] font-semibold" style={{ color: procBoja }}>
           {procenat}%
         </span>
@@ -68,11 +76,11 @@ export default function PrisustvoRed({
           <div className="h-full" style={{ width: `${procenat}%`, background: procBoja }} />
         </div>
       </div>
-      <div className="flex justify-end gap-1.5">
+      <div className="flex justify-end gap-1.25 sm:gap-1.5">
         <button
           onClick={() => postavi(present === true ? null : true)}
           disabled={uToku}
-          className={`rounded-[6px] border px-3.5 py-1.75 font-body text-xs font-semibold transition-colors ${
+          className={`rounded-[6px] border px-2 py-1.5 font-body text-[10.5px] font-semibold transition-colors sm:px-3.5 sm:py-1.75 sm:text-xs ${
             present === true ? "border-green-700 bg-green-700 text-white" : "border-navy-800/16 text-navy-800/55"
           }`}
         >
@@ -81,7 +89,7 @@ export default function PrisustvoRed({
         <button
           onClick={() => postavi(present === false ? null : false)}
           disabled={uToku}
-          className={`rounded-[6px] border px-3.5 py-1.75 font-body text-xs font-semibold transition-colors ${
+          className={`rounded-[6px] border px-2 py-1.5 font-body text-[10.5px] font-semibold transition-colors sm:px-3.5 sm:py-1.75 sm:text-xs ${
             present === false ? "border-red-600 bg-red-600 text-white" : "border-navy-800/16 text-navy-800/55"
           }`}
         >

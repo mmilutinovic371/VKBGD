@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { prijaviSe } from "@/app/akcije";
 
 interface Igrac {
@@ -9,12 +9,36 @@ interface Igrac {
   capNumber: number | null;
 }
 
+const KLJUC_POSLEDNJI = "vk_poslednji_igrac";
+
 export default function Forma({ igraci }: { igraci: Igrac[] }) {
   const [playerId, setPlayerId] = useState<number | "">("");
   const [pin, setPin] = useState("");
   const [greska, setGreska] = useState<string | null>(null);
   const [uToku, pokreni] = useTransition();
   const pinInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    try {
+      const sacuvano = localStorage.getItem(KLJUC_POSLEDNJI);
+      if (sacuvano && igraci.some((i) => i.id === Number(sacuvano))) {
+        setPlayerId(Number(sacuvano));
+        pinInputRef.current?.focus();
+      }
+    } catch {
+      // localStorage nedostupan (privatni režim i sl.) — nije bitno, samo se ne pamti.
+    }
+  }, [igraci]);
+
+  function izaberiIgraca(id: number | "") {
+    setPlayerId(id);
+    try {
+      if (id === "") localStorage.removeItem(KLJUC_POSLEDNJI);
+      else localStorage.setItem(KLJUC_POSLEDNJI, String(id));
+    } catch {
+      // ignoriši — nije kritično
+    }
+  }
 
   function posalji(e: React.FormEvent) {
     e.preventDefault();
@@ -40,7 +64,7 @@ export default function Forma({ igraci }: { igraci: Igrac[] }) {
         <select
           className="rounded-[9px] border border-white/18 bg-white/6 p-3.5 text-[15px] font-medium text-white outline-none focus:border-red-600"
           value={playerId}
-          onChange={(e) => setPlayerId(e.target.value ? Number(e.target.value) : "")}
+          onChange={(e) => izaberiIgraca(e.target.value ? Number(e.target.value) : "")}
         >
           <option value="" className="text-navy-800">
             — izaberi —

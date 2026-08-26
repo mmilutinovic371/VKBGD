@@ -76,44 +76,47 @@ export default async function TrenerLayout({ children }: { children: React.React
 
   return (
     <div className="min-h-screen bg-cream-100">
-      <header className="bg-navy-800 px-6 md:px-7.5">
-        <div className="flex items-center justify-between py-4.5">
-          <div className="flex items-center gap-3">
-            <Grb size={38} />
+      <header className="bg-navy-800">
+        <div className="flex items-center justify-between px-4 py-3.5 sm:px-7.5 sm:py-4.5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <Grb size={30} className="sm:hidden" />
+            <Grb size={38} className="hidden sm:block" />
             <div>
-              <div className="font-cond text-[15px] font-bold uppercase tracking-[.08em] text-white">
+              <div className="font-cond text-[13px] font-bold uppercase tracking-[.06em] text-white sm:text-[15px] sm:tracking-[.08em]">
                 Trenerska konzola
               </div>
-              <div className="font-body text-[11px] font-medium text-white/45">Seniori · sezona 25/26</div>
+              <div className="hidden font-body text-[11px] font-medium text-white/45 sm:block">
+                Seniori · sezona 25/26
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/trener/igraci"
-              className="rounded-[7px] border border-white/20 px-3.5 py-2.25 font-body text-[12.5px] font-semibold text-white transition-colors hover:bg-white/10"
-            >
-              Igrači
-            </Link>
-            <a
-              href="/api/izvoz"
-              className="rounded-[7px] border border-white/20 px-3.5 py-2.25 font-body text-[12.5px] font-semibold text-white transition-colors hover:bg-white/10"
-            >
-              Izvezi u Excel
-            </a>
-            <Link
-              href="/trener"
-              className="rounded-[7px] bg-red-600 px-3.5 py-2.25 font-body text-[12.5px] font-semibold text-white transition-colors hover:bg-red-500"
-            >
-              Novi termin
-            </Link>
-            <OdjaviDugme />
-          </div>
+          <OdjaviDugme />
+        </div>
+        <div className="flex gap-1.5 overflow-x-auto px-4 pb-3 sm:px-7.5">
+          <Link
+            href="/trener/igraci"
+            className="whitespace-nowrap rounded-[7px] border border-white/20 px-3 py-1.75 font-body text-[11.5px] font-semibold text-white transition-colors hover:bg-white/10 sm:px-3.5 sm:py-2.25 sm:text-[12.5px]"
+          >
+            Igrači
+          </Link>
+          <a
+            href="/api/izvoz"
+            className="whitespace-nowrap rounded-[7px] border border-white/20 px-3 py-1.75 font-body text-[11.5px] font-semibold text-white transition-colors hover:bg-white/10 sm:px-3.5 sm:py-2.25 sm:text-[12.5px]"
+          >
+            Izvezi u Excel
+          </a>
+          <Link
+            href="/trener"
+            className="whitespace-nowrap rounded-[7px] bg-red-600 px-3 py-1.75 font-body text-[11.5px] font-semibold text-white transition-colors hover:bg-red-500 sm:px-3.5 sm:py-2.25 sm:text-[12.5px]"
+          >
+            Novi termin
+          </Link>
         </div>
         <TrenerTabs />
       </header>
 
-      <div className="px-6 py-6 md:px-7.5">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="px-4 py-5 sm:px-7.5 sm:py-6">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4">
           {kartice.map((k, i) => (
             <div key={i} className="rounded-[9px] border border-navy-800/9 bg-white p-4">
               <div className="font-body text-[10.5px] font-medium uppercase tracking-[.13em] text-navy-800/45">

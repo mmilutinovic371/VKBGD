@@ -78,10 +78,20 @@ export default function TerminKarta({
 
   return (
     <div
-      className="grid grid-cols-[88px_1fr_auto] items-center gap-5 rounded-[9px] border border-navy-800/9 bg-white p-4.5"
+      className="flex flex-col gap-3.5 rounded-[9px] border border-navy-800/9 bg-white p-4 sm:grid sm:grid-cols-[76px_1fr_auto] sm:items-center sm:gap-5 sm:p-4.5"
       style={{ borderLeft: `4px solid ${AKCENT[termin.kind]}` }}
     >
-      <div className="text-center">
+      {/* Datum — kompaktan red na mobilnom, tri reda centrirano na širem ekranu */}
+      <div className="flex items-baseline gap-2 sm:hidden">
+        <span className="font-body text-[11px] font-medium uppercase tracking-[.1em] text-navy-800/45">
+          {relativniDan(startsAt, sada)}
+        </span>
+        <span className="font-cond text-lg font-bold text-navy-800">
+          {startsAt.getDate()}.{startsAt.getMonth() + 1}
+        </span>
+        <span className="font-body text-[13px] font-semibold text-red-600">{formatVreme(startsAt)}</span>
+      </div>
+      <div className="hidden text-center sm:block">
         <div className="font-body text-[11px] font-medium uppercase tracking-[.12em] text-navy-800/45">
           {relativniDan(startsAt, sada)}
         </div>
@@ -106,7 +116,7 @@ export default function TerminKarta({
         <div className="mt-1.5 font-body text-xs font-medium text-navy-800/50">{najave} najavilo dolazak</div>
       </div>
 
-      <div className="flex flex-col items-end gap-2">
+      <div className="flex flex-col gap-2 sm:items-end">
         <div className="flex gap-1.5">
           {(
             [
@@ -119,7 +129,7 @@ export default function TerminKarta({
               key={vred}
               onClick={() => biraj(vred)}
               disabled={uToku}
-              className={`rounded-[7px] border px-3.5 py-2 font-body text-[12.5px] font-semibold transition-colors ${
+              className={`flex-1 rounded-[7px] border px-2.5 py-2 font-body text-[12px] font-semibold transition-colors sm:flex-none sm:px-3.5 sm:text-[12.5px] ${
                 rsvp === vred
                   ? vred === "dolazim"
                     ? "border-green-700 bg-green-700 text-white"
@@ -133,7 +143,7 @@ export default function TerminKarta({
             </button>
           ))}
         </div>
-        <div className="font-body text-[11.5px] font-medium text-navy-800/42">
+        <div className="font-body text-[11.5px] font-medium text-navy-800/42 sm:text-right">
           {present ? (
             "✓ Čekiran/a"
           ) : otvoren ? (
