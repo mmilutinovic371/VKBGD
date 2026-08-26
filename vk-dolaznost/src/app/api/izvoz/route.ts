@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import ExcelJS from "exceljs";
+import { and, asc, eq, gte, inArray, lt, ne } from "drizzle-orm";
+import { db } from "@/db";
+import { participation, trainings } from "@/db/schema";
 import { trenerSesija } from "@/lib/auth";
 import { kljucPar, presek } from "@/lib/statistika";
 import { formatDatum } from "@/lib/vreme";
+
+const SEDAM_DANA_MS = 7 * 24 * 3600_000;
 
 export async function GET() {
   const t = await trenerSesija();
@@ -51,6 +56,94 @@ export async function GET() {
   listSirovi.getRow(1).font = { bold: true };
   listSirovi.columns.forEach((kolona) => {
     kolona.width = 16;
+  });
+
+  const baza = db();
+  const sveUtakmice = await baza
+    .select()
+    .from(trainings)
+    .where(and(eq(trainings.kind, "utakmica"), eq(trainings.canceled, false)))
+    .orderBy(asc(trainings.startsAt));
+
+  const listNedelja = radnaSveska.addWorksheet("Nedelja pred utakmicu");
+  listNedelja.addRow(["Dolaznost na treninzima/teretani u 7 dana pre svake utakmice (bez same utakmice)."]);
+  listNedelja.addRow([]);
+
+  if (sveUtakmice.length === 0) {
+    listNedelja.addRow(["Nema unetih utakmica u sezoni."]);
+  }
+
+  for (const utakmica of sveUtakmice) {
+    const sedamDanaPre = new Date(utakmica.startsAt.getTime() - SEDAM_DANA_MS);
+
+    const terminiPreUtakmice = await baza
+      .select()
+      .from(trainings)
+      .where(
+        and(
+          eq(trainings.canceled, false),
+          ne(trainings.kind, "utakmica"),
+          gte(trainings.startsAt, sedamDanaPre),
+          lt(trainings.startsAt, utakmica.startsAt),
+        ),
+      )
+      .orderBy(asc(trainings.startsAt));
+
+    const naslovRed = listNedelja.addRow([
+      `Utakmica ${formatDatum(utakmica.startsAt)} — nedelja pre: ${formatDatum(sedamDanaPre)}–${formatDatum(utakmica.startsAt)}`,
+    ]);
+    naslovRed.font = { bold: true };
+
+    if (terminiPreUtakmice.length === 0) {
+      listNedelja.addRow(["Nema treninga/teretane u ovom periodu."]);
+      listNedelja.addRow([]);
+      continue;
+    }
+
+    const idTermina = terminiPreUtakmice.map((t) => t.id);
+    const ucesceNedelje = await baza
+      .select()
+      .from(participation)
+      .where(inArray(participation.trainingId, idTermina));
+    const prisustvoNedelje = new Map<string, boolean | null>();
+    for (const u of ucesceNedelje) prisustvoNedelje.set(kljucPar(u.trainingId, u.playerId), u.present ?? null);
+
+    listNedelja.addRow(["Igrač", ...terminiPreUtakmice.map((t) => formatDatum(t.startsAt)), "Procenat"]).font = {
+      bold: true,
+    };
+
+    const proceniPoIgracu: number[] = [];
+    for (const igrac of igraci) {
+      const celije = terminiPreUtakmice.map((t) => {
+        const p = prisustvoNedelje.get(kljucPar(t.id, igrac.id));
+        if (p === true) return "DA";
+        if (p === false) return "NE";
+        return "";
+      });
+      const brojPrisutan = celije.filter((c) => c === "DA").length;
+      const procenat = Math.round((100 * brojPrisutan) / terminiPreUtakmice.length);
+      proceniPoIgracu.push(procenat);
+      listNedelja.addRow([igrac.name, ...celije, `${procenat}%`]);
+    }
+
+    const ukupnaDolaznost = proceniPoIgracu.length
+      ? Math.round(proceniPoIgracu.reduce((zbir, p) => zbir + p, 0) / proceniPoIgracu.length)
+      : 0;
+    const ukupnoRed = listNedelja.addRow([
+      "UKUPNA DOLAZNOST",
+      ...terminiPreUtakmice.map(() => ""),
+      `${ukupnaDolaznost}%`,
+    ]);
+    ukupnoRed.font = { bold: true };
+    ukupnoRed.eachCell((celija) => {
+      celija.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF5F3EF" } };
+    });
+
+    listNedelja.addRow([]);
+  }
+
+  listNedelja.columns.forEach((kolona, i) => {
+    kolona.width = i === 0 ? 30 : 12;
   });
 
   const bafer = await radnaSveska.xlsx.writeBuffer();

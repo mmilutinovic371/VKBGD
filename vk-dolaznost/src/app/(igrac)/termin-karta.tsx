@@ -24,7 +24,14 @@ const NAZIV_VRSTE: Record<Termin["kind"], string> = {
 
 const AKCENT: Record<Termin["kind"], string> = {
   trening: "#0F1D35",
-  utakmica: "#DA1F2E",
+  utakmica: "rgba(218,165,32,.5)",
+  teretana: "#2A4A7A",
+};
+
+// Puna (ne prigušena) boja za tekst oznake tipa — čitljivost, dok bordura ide na 50%.
+const AKCENT_TEKST: Record<Termin["kind"], string> = {
+  trening: "#0F1D35",
+  utakmica: "#B8860B",
   teretana: "#2A4A7A",
 };
 

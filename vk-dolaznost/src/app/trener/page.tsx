@@ -7,7 +7,7 @@ import NoviTerminForma from "./novi-termin-forma";
 import OtkaziDugme from "./otkazi-dugme";
 
 const NAZIV_VRSTE: Record<string, string> = { trening: "Trening", utakmica: "Utakmica", teretana: "Teretana" };
-const AKCENT: Record<string, string> = { trening: "#0F1D35", utakmica: "#DA1F2E", teretana: "#2A4A7A" };
+const AKCENT: Record<string, string> = { trening: "#0F1D35", utakmica: "rgba(218,165,32,.5)", teretana: "#2A4A7A" };
 
 export default async function PregledTermina() {
   const baza = db();
