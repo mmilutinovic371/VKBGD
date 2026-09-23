@@ -1,22 +1,16 @@
 /**
- * Primenjuje SQL migracije iz ./drizzle na fajl baze. Čist JS (bez tsx) da bi
- * mogao da se pokrene i u Dockeru pri startu kontejnera.
+ * Primenjuje SQL migracije iz ./drizzle na bazu (Turso ili lokalni fajl).
+ * Čist JS (bez tsx) da bi mogao da se pokrene i u Dockeru pri startu kontejnera.
  */
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import fs from "node:fs";
-import path from "node:path";
+import "dotenv/config";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
+import { migrate } from "drizzle-orm/libsql/migrator";
+import { bazaKonfig, opisBaze } from "./konfig.mjs";
 
-const fajl = process.env.DATABASE_FILE ?? "./podaci/vk.db";
-fs.mkdirSync(path.dirname(fajl), { recursive: true });
+const klijent = createClient(bazaKonfig());
+const baza = drizzle(klijent);
+await migrate(baza, { migrationsFolder: "./drizzle" });
 
-const sqlite = new Database(fajl);
-sqlite.pragma("journal_mode = WAL");
-sqlite.pragma("foreign_keys = ON");
-
-const baza = drizzle(sqlite);
-migrate(baza, { migrationsFolder: "./drizzle" });
-
-console.log(`Migracije primenjene na ${fajl}`);
-sqlite.close();
+console.log(`Migracije primenjene na ${opisBaze()}`);
+klijent.close();
