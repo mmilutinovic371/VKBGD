@@ -45,7 +45,7 @@ const danas19h = () => {
 const tx = await db.transaction("write");
 const upisiIgraca = (...args) =>
   tx.execute({
-    sql: "insert into players (name, cap_number, role, active, created_at) values (?, ?, ?, 1, ?)",
+    sql: "insert into players (name, role, active, created_at) values (?, ?, 1, ?)",
     args,
   });
 const upisiTermin = (...args) =>
@@ -60,8 +60,8 @@ const upisiUcesce = (...args) =>
   });
 
 try {
-  await upisiIgraca("Trener Petrović", null, "trener", sada);
-  for (const [i, ime] of IMENA.entries()) await upisiIgraca(ime, i + 1, "igrac", sada);
+  await upisiIgraca("Trener Petrović", "trener", sada);
+  for (const ime of IMENA) await upisiIgraca(ime, "igrac", sada);
 
   const igraci = (await tx.execute("select id from players where role = 'igrac'")).rows;
 

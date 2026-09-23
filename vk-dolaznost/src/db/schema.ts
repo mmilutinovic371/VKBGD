@@ -4,7 +4,6 @@ import { sqliteTable, text, integer, uniqueIndex } from "drizzle-orm/sqlite-core
 export const players = sqliteTable("players", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
-  capNumber: integer("cap_number"),
   role: text("role", { enum: ["igrac", "trener"] }).notNull().default("igrac"),
   pinHash: text("pin_hash"),
   active: integer("active", { mode: "boolean" }).notNull().default(true),

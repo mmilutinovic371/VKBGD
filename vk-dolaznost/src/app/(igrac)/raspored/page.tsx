@@ -55,7 +55,7 @@ export default async function StranicaRasporeda() {
           <div className="text-right">
             <div className="font-body text-[12.5px] font-semibold text-navy-800">{ja.name}</div>
             <div className="font-body text-[11px] font-medium text-navy-800/45">
-              {ja.capNumber ? `kapa ${ja.capNumber} · ` : ""}igrač
+              igrač
             </div>
           </div>
           <div className="grid h-[34px] w-[34px] place-items-center rounded-full bg-navy-800 font-cond text-[13px] font-bold text-white">

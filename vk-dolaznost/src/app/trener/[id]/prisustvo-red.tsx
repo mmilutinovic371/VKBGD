@@ -16,7 +16,6 @@ export default function PrisustvoRed({
   trainingId,
   playerId,
   ime,
-  capNumber,
   rsvp,
   present: pocetnoPresent,
   checkedInAt,
@@ -26,7 +25,6 @@ export default function PrisustvoRed({
   trainingId: number;
   playerId: number;
   ime: string;
-  capNumber: number | null;
   rsvp: Rsvp;
   present: boolean | null;
   checkedInAt: string | null;
@@ -51,7 +49,7 @@ export default function PrisustvoRed({
       style={{ background: present === false ? "rgba(218,31,46,.05)" : "#fff" }}
     >
       <div className="grid h-6.5 w-6.5 place-items-center rounded-full bg-navy-800 font-cond text-[11px] font-bold text-white sm:h-7 sm:w-7 sm:text-xs">
-        {capNumber ?? "–"}
+        {ime.split(" ").map((d) => d[0]).join("").slice(0, 2).toUpperCase()}
       </div>
       <div>
         <div className="flex items-center gap-1.5">

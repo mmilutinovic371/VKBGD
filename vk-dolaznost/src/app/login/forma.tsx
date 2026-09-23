@@ -6,7 +6,6 @@ import { prijaviSe } from "@/app/akcije";
 interface Igrac {
   id: number;
   name: string;
-  capNumber: number | null;
 }
 
 const KLJUC_POSLEDNJI = "vk_poslednji_igrac";
@@ -72,7 +71,6 @@ export default function Forma({ igraci }: { igraci: Igrac[] }) {
           {igraci.map((i) => (
             <option key={i.id} value={i.id} className="text-navy-800">
               {i.name}
-              {i.capNumber ? ` (kapa ${i.capNumber})` : ""}
             </option>
           ))}
         </select>

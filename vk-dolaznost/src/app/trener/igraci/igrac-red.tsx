@@ -6,13 +6,11 @@ import { izmeniIgraca, resetujPin } from "@/app/akcije";
 export default function IgracRed({
   playerId,
   name,
-  capNumber,
   active,
   imaPin,
 }: {
   playerId: number;
   name: string;
-  capNumber: number | null;
   active: boolean;
   imaPin: boolean;
 }) {
@@ -23,7 +21,6 @@ export default function IgracRed({
       <div>
         <p className={`text-sm font-medium ${!active ? "text-navy-800/40 line-through" : ""}`}>
           {name}
-          {capNumber ? <span className="text-navy-800/40"> #{capNumber}</span> : null}
         </p>
         <p className="text-xs text-navy-800/40">{imaPin ? "PIN postavljen" : "Čeka prvu prijavu"}</p>
       </div>

@@ -15,6 +15,13 @@
       "when": 1787760105995,
       "tag": "0001_wide_black_cat",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790157336901,
+      "tag": "0002_bez_broja_kape",
+      "breakpoints": true
     }
   ]
 }

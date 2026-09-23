@@ -40,7 +40,7 @@ zaključavanja).
 
 Tri tabele, `src/db/schema.ts`:
 
-- **players** — `name`, `capNumber`, `role` (`igrac` | `trener`), `pinHash`
+- **players** — `name`, `role` (`igrac` | `trener`), `pinHash`
   (null dok ne postavi PIN), `active`
 - **trainings** — `startsAt`, `durationMin`, `location`, `kind`
   (`trening` | `utakmica` | `teretana`), `checkinOpensMin`, `checkinClosesMin`,

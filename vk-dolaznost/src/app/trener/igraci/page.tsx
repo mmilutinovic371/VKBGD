@@ -21,7 +21,6 @@ export default async function SpisakIgraca() {
             key={igrac.id}
             playerId={igrac.id}
             name={igrac.name}
-            capNumber={igrac.capNumber}
             active={igrac.active}
             imaPin={!!igrac.pinHash}
           />
