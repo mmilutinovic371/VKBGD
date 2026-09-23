@@ -13,7 +13,7 @@ export default async function SpisakIgraca() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-bold">Spisak igrača</h1>
+      <h1 className="font-cond text-xl font-bold uppercase tracking-[.03em] text-navy-800">Spisak igrača</h1>
       <DodajIgracaForma />
       <div className="rounded-xl bg-white p-4 shadow-sm">
         {spisak.map((igrac) => (

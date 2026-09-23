@@ -50,6 +50,41 @@ export const participation = sqliteTable(
   }),
 );
 
+export const notifications = sqliteTable("notifications", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  body: text("body").notNull(),
+  sentAt: integer("sent_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  sentBy: integer("sent_by")
+    .notNull()
+    .references(() => players.id, { onDelete: "cascade" }),
+});
+
+export const notificationReads = sqliteTable(
+  "notification_reads",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    notificationId: integer("notification_id")
+      .notNull()
+      .references(() => notifications.id, { onDelete: "cascade" }),
+    playerId: integer("player_id")
+      .notNull()
+      .references(() => players.id, { onDelete: "cascade" }),
+    readAt: integer("read_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    parUnikatan: uniqueIndex("notification_reads_notification_player_idx").on(
+      t.notificationId,
+      t.playerId,
+    ),
+  }),
+);
+
 export type Player = typeof players.$inferSelect;
 export type Training = typeof trainings.$inferSelect;
 export type Participation = typeof participation.$inferSelect;
+export type Notification = typeof notifications.$inferSelect;
+export type NotificationRead = typeof notificationReads.$inferSelect;

@@ -22,7 +22,7 @@ export default function NoviTerminForma() {
 
   const [datum, setDatum] = useState("");
   const [vreme, setVreme] = useState("19:00");
-  const [lokacija, setLokacija] = useState("Bazen Beograd");
+  const [lokacija, setLokacija] = useState("Bazen Banjica");
   const [vrsta, setVrsta] = useState<"trening" | "utakmica" | "teretana">("trening");
   const [trajanje, setTrajanje] = useState(90);
 
@@ -80,13 +80,13 @@ export default function NoviTerminForma() {
       <div className="flex gap-2">
         <button
           onClick={() => setOtvoreno("jedan")}
-          className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+          className="rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white"
         >
           + Jedan termin
         </button>
         <button
           onClick={() => setOtvoreno("nedeljni")}
-          className="rounded-lg border border-indigo-600 px-3 py-2 text-sm font-medium text-indigo-600"
+          className="rounded-lg border border-red-600 px-3 py-2 text-sm font-medium text-red-600"
         >
           + Nedeljni raspored
         </button>
@@ -99,7 +99,7 @@ export default function NoviTerminForma() {
       onSubmit={otvoreno === "jedan" ? posaljiJedan : posaljiNedeljni}
       className="flex flex-col gap-3 rounded-xl bg-white p-4 shadow-sm"
     >
-      <p className="text-sm font-semibold text-slate-700">
+      <p className="text-sm font-semibold text-navy-800">
         {otvoreno === "jedan" ? "Novi termin" : "Nedeljni raspored"}
       </p>
 
@@ -110,7 +110,7 @@ export default function NoviTerminForma() {
             type="date"
             value={datum}
             onChange={(e) => setDatum(e.target.value)}
-            className="rounded-lg border border-slate-300 p-2"
+            className="rounded-lg border border-navy-800/16 p-2"
           />
         </label>
       ) : (
@@ -121,7 +121,7 @@ export default function NoviTerminForma() {
               type="date"
               value={odDatuma}
               onChange={(e) => setOdDatuma(e.target.value)}
-              className="rounded-lg border border-slate-300 p-2"
+              className="rounded-lg border border-navy-800/16 p-2"
             />
           </label>
           <label className="flex flex-1 flex-col gap-1 text-sm">
@@ -130,7 +130,7 @@ export default function NoviTerminForma() {
               type="date"
               value={doDatuma}
               onChange={(e) => setDoDatuma(e.target.value)}
-              className="rounded-lg border border-slate-300 p-2"
+              className="rounded-lg border border-navy-800/16 p-2"
             />
           </label>
         </div>
@@ -144,7 +144,7 @@ export default function NoviTerminForma() {
               key={d.kod}
               onClick={() => prekidacDan(d.kod)}
               className={`rounded-lg border px-2.5 py-1.5 text-xs font-medium ${
-                dani.has(d.kod) ? "border-indigo-600 bg-indigo-600 text-white" : "border-slate-300 text-slate-600"
+                dani.has(d.kod) ? "border-red-600 bg-red-600 text-white" : "border-navy-800/16 text-navy-800/60"
               }`}
             >
               {d.naziv}
@@ -160,7 +160,7 @@ export default function NoviTerminForma() {
             type="time"
             value={vreme}
             onChange={(e) => setVreme(e.target.value)}
-            className="rounded-lg border border-slate-300 p-2"
+            className="rounded-lg border border-navy-800/16 p-2"
           />
         </label>
         <label className="flex flex-1 flex-col gap-1 text-sm">
@@ -169,7 +169,7 @@ export default function NoviTerminForma() {
             type="number"
             value={trajanje}
             onChange={(e) => setTrajanje(Number(e.target.value))}
-            className="rounded-lg border border-slate-300 p-2"
+            className="rounded-lg border border-navy-800/16 p-2"
           />
         </label>
       </div>
@@ -180,7 +180,7 @@ export default function NoviTerminForma() {
           <input
             value={lokacija}
             onChange={(e) => setLokacija(e.target.value)}
-            className="rounded-lg border border-slate-300 p-2"
+            className="rounded-lg border border-navy-800/16 p-2"
           />
         </label>
         <label className="flex flex-1 flex-col gap-1 text-sm">
@@ -188,7 +188,7 @@ export default function NoviTerminForma() {
           <select
             value={vrsta}
             onChange={(e) => setVrsta(e.target.value as typeof vrsta)}
-            className="rounded-lg border border-slate-300 p-2"
+            className="rounded-lg border border-navy-800/16 p-2"
           >
             <option value="trening">Trening</option>
             <option value="utakmica">Utakmica</option>
@@ -203,14 +203,14 @@ export default function NoviTerminForma() {
         <button
           type="submit"
           disabled={uToku}
-          className="flex-1 rounded-lg bg-indigo-600 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white disabled:opacity-60"
         >
           {uToku ? "Snimanje…" : "Sačuvaj"}
         </button>
         <button
           type="button"
           onClick={() => setOtvoreno(null)}
-          className="rounded-lg border border-slate-300 px-4 py-2 text-sm"
+          className="rounded-lg border border-navy-800/16 px-4 py-2 text-sm"
         >
           Otkaži
         </button>

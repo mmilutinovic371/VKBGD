@@ -1,10 +1,10 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { participation, players, trainings } from "@/db/schema";
+import { notificationReads, notifications, participation, players, trainings } from "@/db/schema";
 import { hesirajPin, napraviSesiju, obrisiSesiju, proveriPin, sesija, trenerSesija } from "@/lib/auth";
 import { prozorOtvoren, generisiTermine, type GenerisiTermineOpcije } from "@/lib/vreme";
 
@@ -203,4 +203,85 @@ export async function resetujPin(playerId: number): Promise<RezultatAkcije> {
   await baza.update(players).set({ pinHash: null }).where(eq(players.id, playerId));
   revalidatePath("/trener/igraci");
   return {};
+}
+
+export async function oznaciSvePrisutne(trainingId: number): Promise<RezultatAkcije> {
+  const t = await trenerSesija();
+  if (!t) return { greska: "Samo trener može ovo da radi." };
+
+  const baza = db();
+  const igraci = await baza
+    .select({ id: players.id })
+    .from(players)
+    .where(and(eq(players.role, "igrac"), eq(players.active, true)));
+
+  for (const igrac of igraci) {
+    await baza
+      .insert(participation)
+      .values({
+        trainingId,
+        playerId: igrac.id,
+        present: true,
+        checkedInAt: new Date(),
+        markedBy: "trener",
+      })
+      .onConflictDoUpdate({
+        target: [participation.trainingId, participation.playerId],
+        set: { present: true, checkedInAt: new Date(), markedBy: "trener" },
+      });
+  }
+
+  revalidatePath(`/trener/${trainingId}`);
+  return {};
+}
+
+export async function obrisiOznake(trainingId: number): Promise<RezultatAkcije> {
+  const t = await trenerSesija();
+  if (!t) return { greska: "Samo trener može ovo da radi." };
+
+  const baza = db();
+  await baza
+    .update(participation)
+    .set({ present: null, checkedInAt: null, markedBy: null })
+    .where(eq(participation.trainingId, trainingId));
+
+  revalidatePath(`/trener/${trainingId}`);
+  return {};
+}
+
+// ---------- Obaveštenja ----------
+
+export async function posaljiObavestenje(tekst: string): Promise<RezultatAkcije> {
+  const t = await trenerSesija();
+  if (!t) return { greska: "Samo trener može ovo da radi." };
+  if (!tekst.trim()) return { greska: "Tekst obaveštenja je obavezan." };
+
+  const baza = db();
+  await baza.insert(notifications).values({ body: tekst.trim(), sentBy: t.playerId });
+
+  revalidatePath("/trener/obavestenja");
+  revalidatePath("/obavestenja");
+  return {};
+}
+
+export async function oznaciObavestenjaProcitana(): Promise<void> {
+  const s = await sesija();
+  if (!s) return;
+
+  const baza = db();
+  const nepročitana = await baza
+    .select({ id: notifications.id })
+    .from(notifications)
+    .leftJoin(
+      notificationReads,
+      and(eq(notificationReads.notificationId, notifications.id), eq(notificationReads.playerId, s.playerId)),
+    )
+    .where(isNull(notificationReads.id));
+
+  for (const n of nepročitana) {
+    await baza
+      .insert(notificationReads)
+      .values({ notificationId: n.id, playerId: s.playerId })
+      .onConflictDoNothing();
+  }
 }
