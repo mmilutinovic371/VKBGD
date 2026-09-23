@@ -4,6 +4,9 @@ import { db } from "@/db";
 import { participation, players, trainings } from "@/db/schema";
 import type { Participation, Player, Training } from "@/db/schema";
 
+/** Ispod ovog procenta igrač ne ulazi u sastav za utakmicu. Jedna konstanta, ne rasuto po ekranima. */
+export const PRAG_DOLAZNOSTI = 70;
+
 export function kljucPar(trainingId: number, playerId: number): string {
   return `${trainingId}:${playerId}`;
 }

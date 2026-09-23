@@ -1,10 +1,45 @@
 @import "tailwindcss";
 
+@theme {
+  --font-cond: var(--font-barlow-condensed), "Barlow Condensed", system-ui, sans-serif;
+  --font-body: var(--font-barlow), Barlow, system-ui, sans-serif;
+
+  --color-navy-900: #0b1628;
+  --color-navy-800: #0f1d35;
+  --color-navy-600: #2a4a7a;
+  --color-red-600: #da1f2e;
+  --color-red-500: #f0303f;
+  --color-red-300: #ff6b76;
+  --color-cream-100: #f5f3ef;
+  --color-cream-200: #e9e6e0;
+  --color-green-700: #1f7a4d;
+  --color-green-300: #7fd1a5;
+  --color-amber-600: #c98a16;
+  --color-amber-300: #e8be6a;
+}
+
 html {
   color-scheme: light;
 }
 
 body {
-  background: #f5f7fa;
-  color: #1a1a2e;
+  background: var(--color-cream-100);
+  color: var(--color-navy-800);
+  font-family: var(--font-body);
+}
+
+.font-cond {
+  font-family: var(--font-cond);
+}
+
+.staze-tamne {
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0 2px,
+    transparent 2px 46px
+  );
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }

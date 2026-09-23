@@ -84,6 +84,22 @@ export function formatDatum(datum: Date): string {
   }).format(datum);
 }
 
+/** "danas" / "sutra" / kratak datum ("sre 28.8"), po beogradskom kalendarskom danu. */
+export function relativniDan(datum: Date, sada: Date = new Date()): string {
+  const dO = delovi(datum, BEOGRAD_ZONA);
+  const dS = delovi(sada, BEOGRAD_ZONA);
+  const kaoBroj = (d: Record<string, string>) => Number(d.year) * 372 + Number(d.month) * 31 + Number(d.day);
+  const razlika = kaoBroj(dO) - kaoBroj(dS);
+  if (razlika === 0) return "danas";
+  if (razlika === 1) return "sutra";
+  return new Intl.DateTimeFormat("sr-Latn-RS", {
+    timeZone: BEOGRAD_ZONA,
+    weekday: "short",
+    day: "numeric",
+    month: "numeric",
+  }).format(datum);
+}
+
 export function formatVreme(datum: Date): string {
   return new Intl.DateTimeFormat("sr-Latn-RS", {
     timeZone: BEOGRAD_ZONA,

@@ -6,11 +6,8 @@ import { formatDatumVreme } from "@/lib/vreme";
 import NoviTerminForma from "./novi-termin-forma";
 import OtkaziDugme from "./otkazi-dugme";
 
-const NAZIV_VRSTE: Record<string, string> = {
-  trening: "Trening",
-  utakmica: "Utakmica",
-  teretana: "Teretana",
-};
+const NAZIV_VRSTE: Record<string, string> = { trening: "Trening", utakmica: "Utakmica", teretana: "Teretana" };
+const AKCENT: Record<string, string> = { trening: "#0F1D35", utakmica: "rgba(218,165,32,.5)", teretana: "#2A4A7A" };
 
 export default async function PregledTermina() {
   const baza = db();
@@ -33,10 +30,9 @@ export default async function PregledTermina() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-bold">Termini</h1>
       <NoviTerminForma />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         {termini.map((termin) => {
           const odrzan = termin.startsAt.getTime() <= sada.getTime();
           const brojevi = brojac.get(termin.id) ?? { dolazi: 0, prisutni: 0 };
@@ -44,16 +40,17 @@ export default async function PregledTermina() {
             <Link
               key={termin.id}
               href={`/trener/${termin.id}`}
-              className={`flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ${
+              className={`flex items-center justify-between rounded-[9px] border border-navy-800/9 bg-white p-4 transition-transform hover:-translate-y-px ${
                 termin.canceled ? "opacity-50" : ""
               }`}
+              style={{ borderLeft: `4px solid ${AKCENT[termin.kind]}` }}
             >
               <div>
-                <p className="font-medium">
+                <p className="font-body text-[14px] font-semibold text-navy-800">
                   {formatDatumVreme(termin.startsAt)}
-                  {termin.canceled && <span className="ml-2 text-xs text-red-600">otkazano</span>}
+                  {termin.canceled && <span className="ml-2 font-body text-xs text-red-600">otkazano</span>}
                 </p>
-                <p className="text-sm text-slate-500">
+                <p className="mt-0.5 font-body text-[12.5px] text-navy-800/50">
                   {NAZIV_VRSTE[termin.kind]} · {termin.location}
                   {!termin.canceled &&
                     (odrzan

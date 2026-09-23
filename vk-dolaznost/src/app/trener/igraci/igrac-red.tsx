@@ -19,13 +19,13 @@ export default function IgracRed({
   const [uToku, pokreni] = useTransition();
 
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 py-2.5 last:border-0">
+    <div className="flex items-center justify-between border-b border-navy-800/8 py-2.5 last:border-0">
       <div>
-        <p className={`text-sm font-medium ${!active ? "text-slate-400 line-through" : ""}`}>
+        <p className={`text-sm font-medium ${!active ? "text-navy-800/40 line-through" : ""}`}>
           {name}
-          {capNumber ? <span className="text-slate-400"> #{capNumber}</span> : null}
+          {capNumber ? <span className="text-navy-800/40"> #{capNumber}</span> : null}
         </p>
-        <p className="text-xs text-slate-400">{imaPin ? "PIN postavljen" : "Čeka prvu prijavu"}</p>
+        <p className="text-xs text-navy-800/40">{imaPin ? "PIN postavljen" : "Čeka prvu prijavu"}</p>
       </div>
       <div className="flex gap-1.5">
         {imaPin && (
@@ -37,7 +37,7 @@ export default function IgracRed({
                 });
             }}
             disabled={uToku}
-            className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs text-slate-600"
+            className="rounded-lg border border-navy-800/16 px-2.5 py-1 text-xs text-navy-800/60"
           >
             Reset PIN
           </button>
@@ -49,7 +49,7 @@ export default function IgracRed({
             })
           }
           disabled={uToku}
-          className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs text-slate-600"
+          className="rounded-lg border border-navy-800/16 px-2.5 py-1 text-xs text-navy-800/60"
         >
           {active ? "Deaktiviraj" : "Aktiviraj"}
         </button>
