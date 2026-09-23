@@ -25,8 +25,8 @@ Zadrži to.
 | Odluka | Zašto |
 |---|---|
 | TypeScript, Next.js 15 App Router | Korisnik je predložio TS. Jedan jezik na obe strane. |
-| **SQLite** (better-sqlite3), ne Postgres | Korisnik je tražio „samo fajl". Prvo je bio Postgres/Neon; prebačeno na SQLite jer je ekipa mala i hoće sve svoje. |
-| **Fly.io**, ne Vercel | Vercel nema trajni disk — SQLite fajl bi nestajao pri svakom deploy-u. Fly daje disk (`[[mounts]]`). |
+| **SQLite** (libSQL / `@libsql/client`), ne Postgres | Korisnik je tražio „samo fajl". Prvo je bio Postgres/Neon; prebačeno na SQLite jer je ekipa mala i hoće sve svoje. |
+| **Vercel + Turso** (besplatno), Fly.io kao alternativa | Vercel nema trajni disk, pa SQLite fajl ne može tamo da živi; Turso je hostovani SQLite sa free planom. Lokalno i na Fly-u i dalje radi običan fajl — bira se preko `TURSO_DATABASE_URL`. |
 | PIN + kolačić, bez mejlova i naloga | 30 ljudi neće praviti naloge. Ime sa spiska + 4 cifre; kolačić traje 180 dana. |
 | Prozor za čekiranje (60 min pre, 30 posle) | Bez toga se polovina ekipe čekira iz kreveta i statistika ne vredi ništa. |
 | Procenat se **ne čuva** u bazi | Računa se iz `participation` pri svakom prikazu, pa se ne može raziđe sa stvarnošću. Isti kod (`src/lib/statistika.ts`) hrani i ekran i Excel. |
@@ -61,7 +61,8 @@ Drizzle ih automatski pretvara u `boolean` i `Date` — provereno.
 
 ```
 src/db/schema.ts          tabele
-src/db/index.ts           veza (WAL, busy_timeout 5s, foreign_keys), lenjo otvaranje
+src/db/index.ts           veza (libSQL klijent + drizzle), lenjo otvaranje
+src/db/konfig.ts          Turso (env) ili lokalni fajl
 src/lib/auth.ts           PIN (bcrypt) + JWT kolačić (jose), sesija(), trenerSesija()
 src/lib/vreme.ts          beogradska zona, prozorOtvoren(), generisiTermine()
 src/lib/statistika.ts     presek(od, do) -> redovi + matrica; koriste ga ekran i izvoz
@@ -97,13 +98,12 @@ u Excelu.
 1. **Push obaveštenja (web push)** — najveći dobitak. Podsetnik dan pre termina
    je ono što tera ljude da se izjasne; bez toga aplikacija zavisi od toga da
    se neko seti da je otvori. Traži service worker i VAPID ključeve.
-2. **Rezervna kopija** je ručna (`fly ssh` + `sqlite3 .backup`). Litestream na
-   S3 je rešenje kad to postane teret.
+2. **Rezervna kopija** je ručna (`turso db shell ... .dump`).
 3. **Nema zaključavanja čekiranja na lokaciju** — ako se pojavi čekiranje iz
    autobusa, sledeći korak je QR kod koji trener prikaže na bazenu.
 4. **Nema izmene termina** — samo dodavanje i otkazivanje.
-5. `fly scale count` mora ostati 1 — disk se kači na jednu mašinu, druga bi
-   dobila svoju praznu bazu.
+5. Ako se koristi Fly umesto Vercela: `fly scale count` mora ostati 1 — disk se
+   kači na jednu mašinu, druga bi dobila svoju praznu bazu.
 
 ## 7. Pokretanje
 
@@ -115,4 +115,4 @@ npm run demo              # ili: npm run seed  za pravi spisak
 npm run dev
 ```
 
-Detalji i Fly.io postupak su u `README.md`.
+Detalji i postupak za Vercel + Turso su u `README.md`.
