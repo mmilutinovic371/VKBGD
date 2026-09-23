@@ -171,20 +171,20 @@ export async function postaviPrisustvo(
 
 // ---------- Trener: spisak igrača ----------
 
-export async function dodajIgraca(name: string, capNumber: number | null): Promise<RezultatAkcije> {
+export async function dodajIgraca(name: string): Promise<RezultatAkcije> {
   const t = await trenerSesija();
   if (!t) return { greska: "Samo trener može ovo da radi." };
   if (!name.trim()) return { greska: "Ime je obavezno." };
 
   const baza = db();
-  await baza.insert(players).values({ name: name.trim(), capNumber, role: "igrac" });
+  await baza.insert(players).values({ name: name.trim(), role: "igrac" });
   revalidatePath("/trener/igraci");
   return {};
 }
 
 export async function izmeniIgraca(
   playerId: number,
-  izmene: { name?: string; capNumber?: number | null; active?: boolean },
+  izmene: { name?: string; active?: boolean },
 ): Promise<RezultatAkcije> {
   const t = await trenerSesija();
   if (!t) return { greska: "Samo trener može ovo da radi." };

@@ -11,7 +11,7 @@ export default async function StranicaPrijave() {
   if (s) redirect(s.role === "trener" ? "/trener" : "/");
 
   const spisak = await db()
-    .select({ id: players.id, name: players.name, capNumber: players.capNumber })
+    .select({ id: players.id, name: players.name })
     .from(players)
     .where(eq(players.active, true))
     .orderBy(asc(players.name));

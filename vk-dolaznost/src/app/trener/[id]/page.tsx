@@ -63,7 +63,6 @@ export default async function DetaljTermina({ params }: { params: Promise<{ id: 
               trainingId={trainingId}
               playerId={igrac.id}
               ime={igrac.name}
-              capNumber={igrac.capNumber}
               rsvp={ucesceMapa.get(igrac.id)?.rsvp ?? null}
               present={ucesceMapa.get(igrac.id)?.present ?? null}
               checkedInAt={ucesceMapa.get(igrac.id)?.checkedInAt?.toISOString() ?? null}

@@ -38,13 +38,13 @@ if (IMENA.length === 0) {
 
 const sada = Math.floor(Date.now() / 1000);
 const upis =
-  "insert into players (name, cap_number, role, pin_hash, active, created_at) values (?, ?, ?, ?, 1, ?)";
+  "insert into players (name, role, pin_hash, active, created_at) values (?, ?, ?, 1, ?)";
 
 const igracHash = bcrypt.hashSync(PODRAZUMEVANI_PIN, 10);
 await db.batch(
   [
-    { sql: upis, args: [TRENER, null, "trener", bcrypt.hashSync(TRENER_PIN, 10), sada] },
-    ...IMENA.map((ime, i) => ({ sql: upis, args: [ime, i + 1, "igrac", igracHash, sada] })),
+    { sql: upis, args: [TRENER, "trener", bcrypt.hashSync(TRENER_PIN, 10), sada] },
+    ...IMENA.map((ime) => ({ sql: upis, args: [ime, "igrac", igracHash, sada] })),
   ],
   "write",
 );

@@ -36,7 +36,7 @@ export async function GET() {
   });
 
   const listSirovi = radnaSveska.addWorksheet("Sirovi podaci");
-  listSirovi.addRow(["Igrač", "Kapa", "Datum", "Vrsta", "Lokacija", "Najava", "Prisustvo"]);
+  listSirovi.addRow(["Igrač", "Datum", "Vrsta", "Lokacija", "Najava", "Prisustvo"]);
   const treniniMapa = new Map(termini.map((t2) => [t2.id, t2]));
   const igraciMapa = new Map(igraci.map((i) => [i.id, i]));
   for (const u of ucesca) {
@@ -45,7 +45,6 @@ export async function GET() {
     if (!termin || !igrac) continue;
     listSirovi.addRow([
       igrac.name,
-      igrac.capNumber ?? "",
       formatDatum(termin.startsAt),
       termin.kind,
       termin.location,
