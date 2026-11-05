@@ -62,7 +62,10 @@ export default function PrisustvoRed({
           </span>
         </div>
         <div className="font-body text-[11px] text-navy-800/45 sm:text-[11.5px]">
-          Najavio: {rsvp ? RSVP_TEKST[rsvp] : "—"}
+          Najavio:{" "}
+          <span className={rsvp === "ne_dolazim" ? "font-semibold text-red-600" : undefined}>
+            {rsvp ? RSVP_TEKST[rsvp] : "—"}
+          </span>
           {present === true && checkedInAt ? ` · sam se čekirao ${formatVreme(new Date(checkedInAt))}` : ""}
         </div>
       </div>

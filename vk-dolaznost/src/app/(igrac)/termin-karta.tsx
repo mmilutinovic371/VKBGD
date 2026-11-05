@@ -142,7 +142,7 @@ export default function TerminKarta({
                     ? "border-green-700 bg-green-700 text-white"
                     : vred === "mozda"
                       ? "border-amber-600 bg-amber-600 text-white"
-                      : "border-navy-800/55 bg-navy-800/55 text-white"
+                      : "border-red-600 bg-red-600 text-white"
                   : "border-navy-800/16 bg-white text-navy-800/60"
               }`}
             >

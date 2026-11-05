@@ -254,7 +254,11 @@ function SledeciRed({ stavka }: { stavka: SledeciStavka }) {
         onClick={klik}
         disabled={uToku}
         className={`rounded-[20px] border px-3.25 py-1.75 font-body text-[11.5px] font-semibold ${
-          aktivan ? "border-green-700 bg-green-700 text-white" : "border-white/20 bg-white/6 text-white/70"
+          aktivan
+            ? "border-green-700 bg-green-700 text-white"
+            : rsvp === "ne_dolazim"
+              ? "border-red-600 bg-red-600 text-white"
+              : "border-white/20 bg-white/6 text-white/70"
         }`}
       >
         {rsvp === "dolazim" ? "Dolazim" : rsvp === "ne_dolazim" ? "Ne dolazim" : "Izjasni se"}
