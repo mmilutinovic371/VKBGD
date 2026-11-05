@@ -20,10 +20,11 @@ export default async function PregledTermina() {
     ? await baza.select().from(participation).where(inArray(participation.trainingId, idTermina))
     : [];
 
-  const brojac = new Map<number, { dolazi: number; prisutni: number }>();
+  const brojac = new Map<number, { dolazi: number; neDolazi: number; prisutni: number }>();
   for (const u of ucesca) {
-    const trenutno = brojac.get(u.trainingId) ?? { dolazi: 0, prisutni: 0 };
+    const trenutno = brojac.get(u.trainingId) ?? { dolazi: 0, neDolazi: 0, prisutni: 0 };
     if (u.rsvp === "dolazim") trenutno.dolazi++;
+    if (u.rsvp === "ne_dolazim") trenutno.neDolazi++;
     if (u.present === true) trenutno.prisutni++;
     brojac.set(u.trainingId, trenutno);
   }
@@ -35,7 +36,7 @@ export default async function PregledTermina() {
       <div className="flex flex-col gap-2.5">
         {termini.map((termin) => {
           const odrzan = termin.startsAt.getTime() <= sada.getTime();
-          const brojevi = brojac.get(termin.id) ?? { dolazi: 0, prisutni: 0 };
+          const brojevi = brojac.get(termin.id) ?? { dolazi: 0, neDolazi: 0, prisutni: 0 };
           return (
             <Link
               key={termin.id}
@@ -56,6 +57,9 @@ export default async function PregledTermina() {
                     (odrzan
                       ? ` · ${brojevi.prisutni} prisutno`
                       : ` · ${brojevi.dolazi} najavilo dolazak`)}
+                  {!termin.canceled && !odrzan && brojevi.neDolazi > 0 && (
+                    <span className="font-semibold text-red-600"> · {brojevi.neDolazi} ne dolazi</span>
+                  )}
                 </p>
               </div>
               {!termin.canceled && !odrzan && <OtkaziDugme trainingId={termin.id} />}

@@ -36,7 +36,7 @@ async function ucitajKartice() {
     .orderBy(asc(trainings.startsAt))
     .limit(1);
 
-  let najavaUtakmice = { vrednost: "—", ime: "Naredna utakmica" };
+  let najavaUtakmice = { vrednost: "—", ime: "Naredna utakmica", neDolazi: 0 };
   if (narednaUtakmica) {
     const igraci = await baza
       .select({ id: players.id })
@@ -48,6 +48,7 @@ async function ucitajKartice() {
       .where(eq(participation.trainingId, narednaUtakmica.id));
     const dolazi = ucesce.filter((u) => u.rsvp === "dolazim").length;
     najavaUtakmice = {
+      neDolazi: ucesce.filter((u) => u.rsvp === "ne_dolazim").length,
       vrednost: `${dolazi}/${igraci.length}`,
       ime: `Najavilo za ${relativniDan(narednaUtakmica.startsAt, sada)}`,
     };
@@ -129,6 +130,11 @@ export default async function TrenerLayout({ children }: { children: React.React
             <div className="mt-1.25 flex items-baseline gap-1.75">
               <span className="font-cond text-[32px] font-bold text-navy-800">{najavaUtakmice.vrednost}</span>
               <span className="font-body text-xs font-semibold text-navy-800">utakmica</span>
+              {najavaUtakmice.neDolazi > 0 && (
+                <span className="font-body text-xs font-semibold text-red-600">
+                  · {najavaUtakmice.neDolazi} ne dolazi
+                </span>
+              )}
             </div>
           </div>
 

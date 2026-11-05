@@ -34,6 +34,9 @@ export default async function DetaljTermina({ params }: { params: Promise<{ id: 
   const prisutnoBroj = vrednosti.filter((v) => v === true).length;
   const odsutnoBroj = vrednosti.filter((v) => v === false).length;
   const neoznacenoBroj = igraci.length - prisutnoBroj - odsutnoBroj;
+  const rsvpovi = igraci.map((i) => ucesceMapa.get(i.id)?.rsvp ?? null);
+  const najavioBroj = rsvpovi.filter((r) => r === "dolazim").length;
+  const neDolaziBroj = rsvpovi.filter((r) => r === "ne_dolazim").length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -45,6 +48,12 @@ export default async function DetaljTermina({ params }: { params: Promise<{ id: 
             </h1>
             <p className="mt-1 font-body text-[12.5px] text-navy-800/50">
               {prisutnoBroj} prisutno · {odsutnoBroj} odsutno · {neoznacenoBroj} neoznačeno
+            </p>
+            <p className="mt-0.5 font-body text-[12.5px] text-navy-800/50">
+              Najave: {najavioBroj} dolazi ·{" "}
+              <span className={neDolaziBroj > 0 ? "font-semibold text-red-600" : undefined}>
+                {neDolaziBroj} ne dolazi
+              </span>
             </p>
           </div>
           <AkcijeSkupno trainingId={trainingId} />
