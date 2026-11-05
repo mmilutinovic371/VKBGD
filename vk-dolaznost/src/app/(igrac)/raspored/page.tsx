@@ -29,8 +29,10 @@ export default async function StranicaRasporeda() {
 
   const mojeMapa = new Map(ucesce.filter((u) => u.playerId === ja.id).map((u) => [u.trainingId, u]));
   const najaveBrojac = new Map<number, number>();
+  const neDolaziBrojac = new Map<number, number>();
   for (const u of ucesce) {
     if (u.rsvp === "dolazim") najaveBrojac.set(u.trainingId, (najaveBrojac.get(u.trainingId) ?? 0) + 1);
+    if (u.rsvp === "ne_dolazim") neDolaziBrojac.set(u.trainingId, (neDolaziBrojac.get(u.trainingId) ?? 0) + 1);
   }
 
   const inicijali = ja.name
@@ -83,6 +85,7 @@ export default async function StranicaRasporeda() {
             rsvp={mojeMapa.get(termin.id)?.rsvp ?? null}
             present={mojeMapa.get(termin.id)?.present ?? null}
             najave={najaveBrojac.get(termin.id) ?? 0}
+            neDolazi={neDolaziBrojac.get(termin.id) ?? 0}
           />
         ))}
       </div>

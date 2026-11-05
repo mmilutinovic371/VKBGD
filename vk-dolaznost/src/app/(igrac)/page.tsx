@@ -49,10 +49,13 @@ export default async function EkranDanas() {
     const rsvp = ucesceMapa.get(i.id)?.rsvp ?? null;
     return {
       ime: inicijalIme(i.name),
-      stanje: (rsvp === "dolazim" ? "dolazi" : rsvp === "mozda" ? "mozda" : "ostalo") as
-        | "dolazi"
-        | "mozda"
-        | "ostalo",
+      stanje: (rsvp === "dolazim"
+        ? "dolazi"
+        : rsvp === "mozda"
+          ? "mozda"
+          : rsvp === "ne_dolazim"
+            ? "ne_dolazi"
+            : "ostalo") as "dolazi" | "mozda" | "ne_dolazi" | "ostalo",
     };
   });
 

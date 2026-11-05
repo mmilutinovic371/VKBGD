@@ -40,11 +40,13 @@ export default function TerminKarta({
   rsvp: pocetniRsvp,
   present: pocetniPresent,
   najave,
+  neDolazi,
 }: {
   termin: Termin;
   rsvp: Rsvp;
   present: boolean | null;
   najave: number;
+  neDolazi: number;
 }) {
   const [rsvp, setRsvp] = useState<Rsvp>(pocetniRsvp);
   const [present, setPresent] = useState<boolean | null>(pocetniPresent);
@@ -56,6 +58,10 @@ export default function TerminKarta({
     const id = setInterval(() => setSada(new Date()), 15_000);
     return () => clearInterval(id);
   }, []);
+
+  // Brojači uključuju i moj (početni) odgovor — usklađujemo ih sa trenutnim izborom.
+  const najaveSada = najave - (pocetniRsvp === "dolazim" ? 1 : 0) + (rsvp === "dolazim" ? 1 : 0);
+  const neDolaziSada = neDolazi - (pocetniRsvp === "ne_dolazim" ? 1 : 0) + (rsvp === "ne_dolazim" ? 1 : 0);
 
   const startsAt = new Date(termin.startsAt);
   const otvoren = prozorOtvoren(
@@ -120,7 +126,10 @@ export default function TerminKarta({
           <span className="font-body text-[13px] font-medium text-navy-800/60">{termin.location}</span>
         </div>
         <div className="mt-1 font-body text-base font-semibold text-navy-800">{NAZIV_VRSTE[termin.kind]}</div>
-        <div className="mt-1.5 font-body text-xs font-medium text-navy-800/50">{najave} najavilo dolazak</div>
+        <div className="mt-1.5 font-body text-xs font-medium text-navy-800/50">
+          {najaveSada} najavilo dolazak
+          {neDolaziSada > 0 && <span className="font-semibold text-red-600"> · {neDolaziSada} ne dolazi</span>}
+        </div>
       </div>
 
       <div className="flex flex-col gap-2 sm:items-end">
@@ -142,7 +151,7 @@ export default function TerminKarta({
                     ? "border-green-700 bg-green-700 text-white"
                     : vred === "mozda"
                       ? "border-amber-600 bg-amber-600 text-white"
-                      : "border-navy-800/55 bg-navy-800/55 text-white"
+                      : "border-red-600 bg-red-600 text-white"
                   : "border-navy-800/16 bg-white text-navy-800/60"
               }`}
             >

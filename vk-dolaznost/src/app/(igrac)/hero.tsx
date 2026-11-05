@@ -26,7 +26,7 @@ interface GlavniTermin {
 
 interface Cip {
   ime: string;
-  stanje: "dolazi" | "mozda" | "ostalo";
+  stanje: "dolazi" | "mozda" | "ne_dolazi" | "ostalo";
 }
 
 interface SledeciStavka {
@@ -84,6 +84,7 @@ export default function Hero({
       : `${String(Math.floor(ostaloSek / 3600)).padStart(2, "0")}:${String(Math.floor((ostaloSek % 3600) / 60)).padStart(2, "0")}`;
 
   const dolaziBroj = cipovi.filter((c) => c.stanje === "dolazi").length;
+  const neDolaziBroj = cipovi.filter((c) => c.stanje === "ne_dolazi").length;
 
   function cekirajKlik() {
     setGreska(null);
@@ -165,6 +166,7 @@ export default function Hero({
           <div className="mt-8 border-t border-white/9 pt-5.5">
             <div className="font-body text-[11px] font-medium uppercase tracking-[.14em] text-white/40">
               Ko je najavio dolazak · {dolaziBroj} od {ukupnoIgraca}
+              {neDolaziBroj > 0 && <span className="text-red-300"> · {neDolaziBroj} ne dolazi</span>}
             </div>
             <div className="mt-3 flex flex-wrap gap-1.75">
               {cipovi.map((c, i) => (
@@ -175,7 +177,9 @@ export default function Hero({
                       ? "border-green-700/55 bg-green-700/22 text-green-300"
                       : c.stanje === "mozda"
                         ? "border-amber-600/50 bg-amber-600/16 text-amber-300"
-                        : "border-white/16 bg-white/4 text-white/45"
+                        : c.stanje === "ne_dolazi"
+                          ? "border-red-600/55 bg-red-600/20 text-red-300 line-through decoration-red-300/60"
+                          : "border-white/16 bg-white/4 text-white/45"
                   }`}
                 >
                   {c.ime}
@@ -254,7 +258,11 @@ function SledeciRed({ stavka }: { stavka: SledeciStavka }) {
         onClick={klik}
         disabled={uToku}
         className={`rounded-[20px] border px-3.25 py-1.75 font-body text-[11.5px] font-semibold ${
-          aktivan ? "border-green-700 bg-green-700 text-white" : "border-white/20 bg-white/6 text-white/70"
+          aktivan
+            ? "border-green-700 bg-green-700 text-white"
+            : rsvp === "ne_dolazim"
+              ? "border-red-600 bg-red-600 text-white"
+              : "border-white/20 bg-white/6 text-white/70"
         }`}
       >
         {rsvp === "dolazim" ? "Dolazim" : rsvp === "ne_dolazim" ? "Ne dolazim" : "Izjasni se"}
